@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">kompdb</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="barang" view="standard">
+<left>566</left>
+<top>323</top>
+<width>221</width>
+<height>197</height>
+<sql_create_table>CREATE TABLE `barang` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(20) DEFAULT NULL,
+  `harga` double DEFAULT NULL,
+  `stok` int(11) DEFAULT NULL,
+  `lama_garansi` varchar(20) DEFAULT NULL,
+  `id_kategori` int(11) DEFAULT NULL,
+  `id_merk` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_kategori` (`id_kategori`),
+  KEY `id_merk` (`id_merk`),
+  CONSTRAINT `barang_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `barang_ibfk_2` FOREIGN KEY (`id_merk`) REFERENCES `merk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="barang_cacat" view="standard">
+<left>886</left>
+<top>0</top>
+<width>223</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `barang_cacat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_barang` varchar(30) DEFAULT NULL,
+  `tgl_retur` date DEFAULT NULL,
+  `deskripsi` varchar(25) DEFAULT NULL,
+  `id_penjualan` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_penjualan` (`id_penjualan`),
+  CONSTRAINT `barang_cacat_ibfk_1` FOREIGN KEY (`id_penjualan`) REFERENCES `penjualan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="detail_penjualan" view="standard">
+<left>884</left>
+<top>193</top>
+<width>215</width>
+<height>180</height>
+<sql_create_table>CREATE TABLE `detail_penjualan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `jumlah` int(11) DEFAULT NULL,
+  `harga` double DEFAULT NULL,
+  `tgl_batas_garansi` date DEFAULT NULL,
+  `id_penjualan` int(11) DEFAULT NULL,
+  `id_barang` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_penjualan` (`id_penjualan`),
+  KEY `id_barang` (`id_barang`),
+  CONSTRAINT `detail_penjualan_ibfk_1` FOREIGN KEY (`id_penjualan`) REFERENCES `penjualan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `detail_penjualan_ibfk_2` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="jabatan" view="standard">
+<left>28</left>
+<top>25</top>
+<width>176</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `jabatan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="kategori" view="standard">
+<left>270</left>
+<top>291</top>
+<width>176</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `kategori` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="merk" view="standard">
+<left>256</left>
+<top>432</top>
+<width>213</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `merk` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `merk` varchar(20) DEFAULT NULL,
+  `distributor` varchar(20) DEFAULT NULL,
+  `alamat_dist` varchar(30) DEFAULT NULL,
+  `no_telp_dist` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="pegawai" view="standard">
+<left>253</left>
+<top>22</top>
+<width>235</width>
+<height>214</height>
+<sql_create_table>CREATE TABLE `pegawai` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_depan` varchar(20) DEFAULT NULL,
+  `nama_belakang` varchar(20) DEFAULT NULL,
+  `username` varchar(15) DEFAULT NULL,
+  `password` varchar(15) DEFAULT NULL,
+  `alamat` varchar(30) DEFAULT NULL,
+  `no_telp` varchar(15) DEFAULT NULL,
+  `id_jabatan` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pegawai_ibfk_1` (`id_jabatan`),
+  CONSTRAINT `pegawai_ibfk_1` FOREIGN KEY (`id_jabatan`) REFERENCES `jabatan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="penjualan" view="standard">
+<left>563</left>
+<top>51</top>
+<width>191</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `penjualan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tgl_penjualan` date DEFAULT NULL,
+  `total` double DEFAULT NULL,
+  `id_pegawai` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_pegawai` (`id_pegawai`),
+  CONSTRAINT `penjualan_ibfk_1` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
