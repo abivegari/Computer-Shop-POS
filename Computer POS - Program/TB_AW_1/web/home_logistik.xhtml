@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>SUBUR COMP - Home - Logistik</title>
+        <link type="text/css" rel="stylesheet" href="other/style.css" />
+    </h:head>
+    <h:body>
+
+        <!--        Layout utama -->
+        <p:layout fullPage="true">
+
+            <!--            Layout header-->
+            <p:layoutUnit position="north"> 
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td valign="middle" align="left">
+                            <img  src="images/logos.png" height="150" width="150" style="margin-left: 100px"/>
+                        </td>
+                        <td valign="middle" align="right">
+                            <img src="images/login_1.png" height="90" width="90" style="margin-right: 70px"/>
+                            <div style="margin-left: 700px">GUDANG - <h:outputText value="#{manageBean.nama}"/></div>
+                        </td>
+                        <td align="right">
+                            <p:link outcome="index.xhtml"><img src="images/l1.png" height="150" width="150" title="Log Out"></img></p:link>
+                        </td>
+                    </tr>
+                </table>
+            </p:layoutUnit>
+
+            <!--            Layout menu -->
+            <p:layoutUnit position="west" size="300"> 
+                <p:panel> 
+                    <br/>
+
+
+
+                    <!--Menu Logistik-->
+                    <p:link outcome="logistik/kategori.xhtml" target="main">
+                        <ul style="text-align: center">
+                            <img  src="images/kategori.png" alt="Barang" height="100" width="100"><br/>Kategori</img>
+                        </ul>
+                    </p:link>
+                    <p:link outcome="logistik/merk.xhtml" target="main">
+                        <ul style="text-align: center">
+                            <img  src="images/merk.png" alt="Barang" height="100" width="100"><br/>Merk</img>
+                        </ul>
+                    </p:link>
+                    <p:link outcome="logistik/barang.xhtml" target="main">
+                        <ul style="text-align: center">
+                            <img  src="images/barang.png" alt="Barang" height="100" width="100"><br/>Barang</img>
+                        </ul>
+                    </p:link>
+
+
+
+                </p:panel>        
+            </p:layoutUnit>
+
+            <!--            Layout isi-->
+            <p:layoutUnit position="center">
+                <iframe src="other/welcome_home.xhtml" width="100%" height="900px" name="main" frameborder='0'/> 
+            </p:layoutUnit>
+
+            <!--            Layout footer-->
+            <p:layoutUnit  position="south" size="70">
+                <p:panel style="background-color: black">
+                    <div align="right" style="color: orange">2018 - Abi Wiby - Subur Comp </div>
+                </p:panel>
+            </p:layoutUnit>
+        </p:layout>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - History Transaksi</title>
+    </h:head>
+    <h:body>
+
+        <h:form id="form">
+            #{beanPenjualan.selectAll()}
+            <p:growl id="msgs"/>
+            <!--            Tabel transaksi-->
+            <p:panel header="Tabel Data Transaksi" style="background-color: orange;margin-right: 50px">
+                <p:dataTable editable="true" var="item" value="#{beanPenjualan.listPenjualan}" selectionMode="single" selection="#{beanPenjualan.penjualan}" rowKey="#{item.id}">
+                    <p:ajax event="rowSelect" listener="#{beanPenjualan.onRowSelect}" update=":table" />
+                    <p:column headerText="ID Penjualan">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Tanggal Penjualan">
+                        <h:outputText value="#{item.tglPenjualan}">
+                            <f:convertDateTime timeZone="false" pattern="dd/MM/YYYY"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Total">
+                        Rp.<h:outputText value="#{item.total}">
+                            <f:convertNumber type="number"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Pegawai Bertugas">
+                        #{item.idPegawai.namaDepan}
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form><br/>
+
+        <h:form id="table">   
+            <!--            Tabel detail transaksi-->
+            <p:panel header="Tabel Detail Data Transaksi" style="background-color: orange;margin-right: 50px">
+                <p:dataTable var="item" value="#{beanPenjualan.listDetailPenjualan}" >
+                    <p:column headerText="ID Penjualan">
+                        #{item.idPenjualan.id}
+                    </p:column>
+                    <p:column headerText="ID Detail Penjualan">
+                        #{item.id}
+                    </p:column>                   
+                    <p:column headerText="Tanggal Batas Garansi Toko">
+                        <h:outputText value="#{item.tglBatasGaransi}">
+                            <f:convertDateTime timeZone="false" pattern="dd/MM/YYYY"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Kategori">
+                        #{item.idBarang.idKategori.nama}
+                    </p:column>
+                    <p:column headerText="Merk">
+                        #{item.idBarang.idMerk.merk}
+                    </p:column>
+                    <p:column headerText="Nama Barang">
+                        #{item.idBarang.nama}
+                    </p:column>
+                    <p:column headerText="Lama Garansi Distributor">
+                        #{item.idBarang.lamaGaransi}
+                    </p:column>
+                    <p:column headerText="Harga">
+                        <h:outputText value="#{item.idBarang.harga}">
+                            <f:convertNumber type="number"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Jumlah">
+                        #{item.jumlah}
+                    </p:column>
+                    <p:column headerText="Sub Total">
+                        <h:outputText value="#{item.harga}">
+                            <f:convertNumber type="number"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - Barang</title>
+    </h:head>
+    <h:body>
+        <h:form id="input">
+            #{beanBarang.selectAll()}
+            <!--            Menu barang-->
+            <p:panel header="Data Barang" style="background-color: orange; margin-right: 50px">               
+                <h:panelGrid columns="2" style="border: 0" headerClass="header" cellpadding="5">
+                    Kategori <p:selectOneMenu style="width: 193px" value="#{beanBarang.selectedKategori}" converter="entityConverter">
+                        <f:selectItems value="#{beanBarang.listKategori}" var="kat" itemLabel="#{kat.nama}"/>
+                    </p:selectOneMenu>
+                    Merk <p:selectOneMenu style="width: 193px" value="#{beanBarang.selectedMerk}" converter="entityConverter">
+                        <f:selectItems value="#{beanBarang.listMerk}" var="merk" itemLabel="#{merk.merk}"/>
+                    </p:selectOneMenu>
+                    Nama Barang <p:inputText value="#{beanBarang.nama_barang}" required="true" requiredMessage="Nama Barang harus diisi!"/>
+                    Harga <p:inputText value="#{beanBarang.harga}" required="true" requiredMessage="Harga harus diisi!" converterMessage="Harga harus angka!"></p:inputText>
+                    Stok <p:spinner size="18" value="#{beanBarang.stok}" min="1"/>
+                    Lama Garansi Distributor <p:inputText value="#{beanBarang.lama_garansi}" required="true" requiredMessage="Lama garansi harus diisi!"/><br/>
+                    <p:commandButton value="Tambah Data Barang" action="#{beanBarang.addBarang()}" update="input table"/>
+                </h:panelGrid>
+            </p:panel> <br/>
+        </h:form>
+        <h:form id="table">
+            #{beanBarang.selectAll()}
+            <p:growl id="msgs"/>
+            <!--            Tabel barang-->
+            <p:panel header="Tabel Data Barang" style="background-color: orange;margin-right: 50px">
+                <p:dataTable editable="true" var="item" value="#{beanBarang.listBarang}">
+                    <p:ajax event="rowEdit" listener="#{beanBarang.onRowEdit}" update=":table:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{beanBarang.onRowCancel}" update=":table:msgs" />
+                    <p:column headerText="ID Barang">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Kategori">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.idKategori.nama}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{item.idKategori}" style="width:100%" converter="entityConverter">
+                                    <f:selectItems value="#{beanBarang.listKategori}" var="kat" itemLabel="#{kat.nama}"/>
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Merk">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.idMerk.merk}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{item.idMerk}" style="width:100%" converter="entityConverter">
+                                    <f:selectItems value="#{beanBarang.listMerk}" var="merk" itemLabel="#{merk.merk}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Nama Barang">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.nama}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.nama}" style="width:100%" required="true" requiredMessage="Nama Barang harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Harga Barang">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.harga}">
+                                    <f:convertNumber type="number"/>
+                                </h:outputText></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.harga}" style="width:100%" required="true" requiredMessage="Harga Beli harus diisi!" converterMessage="Harga Beli harus angka!"></p:inputText></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Stok">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.stok}" /></f:facet>
+                            <f:facet name="input">
+                                <p:spinner size="18" value="#{item.stok}" min="0"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Lama Garansi Distributor">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.lamaGaransi}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.lamaGaransi}" style="width:100%" required="true" requiredMessage="Lama Garansi Distributor harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Delete">
+                        <p:commandLink value="Hapus" action="#{beanBarang.deleteBarang(item)}" style="color: red;" update="@form"><p:confirm header="Konfirmasi Hapus Barang" message="Hapus Barang?"/></p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>  
+        </h:form>
+    </h:body>
+</html>
+

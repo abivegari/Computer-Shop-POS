@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - Merk</title>
+        <link href="style.css" type="text/css" rel="stylesheet"/>
+    </h:head>
+    <h:body>
+        <h:form id="input">
+            <!--            Input Merk-->
+            <p:panel header="Data Merk" style="background-color: orange; margin-right: 50px">               
+                <h:panelGrid columns="2" style="border: 0" headerClass="header" cellpadding="5">
+                    Nama Merk <p:inputText size="16" value="#{beanMerk.nama_merk}" required="true" requiredMessage="Nama Merk harus diisi!"/>
+                    Distributor <p:inputText size="16" value="#{beanMerk.distributor}" required="true" requiredMessage="Distributor harus diisi!"/>
+                    Alamat Distributor <p:inputText size="16" value="#{beanMerk.alamat_distri}" required="true" requiredMessage="Alamat distributor harus diisi!"/>
+                    No.Telepon Distributor <p:inputText size="16" value="#{beanMerk.no_telp_distri}" required="true" requiredMessage="No.Telp distributor harus diisi!!" converterMessage="No.Telp harus angka!">
+                        <f:convertNumber integerOnly="true" type="number"/></p:inputText>
+                    <br/><p:commandButton value="Tambah Data Merk" action="#{beanMerk.addMerk()}" update="input table"/>
+                </h:panelGrid>
+            </p:panel> <br/>
+        </h:form>
+        <h:form id="table">
+            #{beanMerk.selectAll()}
+            <p:growl id="msgs"/>
+            <!--            Tabel Merk-->
+            <p:panel header="Tabel Data Merk" style="background-color: orange;margin-right: 50px" >
+                <p:dataTable editable="true" var="item" value="#{beanMerk.listMerk}" >
+                    <p:ajax event="rowEdit" listener="#{beanMerk.onRowEdit}" update=":table:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{beanKategori.onRowCancel}" update=":table:msgs" />
+                    <p:column headerText="ID Merk">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Nama Merk">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.merk}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.merk}" style="width:100%" required="true" requiredMessage="Nama Merk harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Distributor">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.distributor}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.distributor}" style="width:100%" required="true" requiredMessage="Distributor harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Alamat Distributor">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.alamatDist}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.alamatDist}" style="width:100%" required="true" requiredMessage="Alamat Distributo harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="No.Telepon Distributor">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.noTelpDist}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.noTelpDist}" style="width:100%" required="true" requiredMessage="No.Telepon Distributor harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Delete">
+                        <p:commandLink value="Hapus" action="#{beanMerk.deleteMerk(item)}" style="color: red;" update="@form"><p:confirm header="Konfirmasi Hapus Merk" message="Hapus Merk?"/></p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>  
+        </h:form>
+    </h:body>
+</html>
+

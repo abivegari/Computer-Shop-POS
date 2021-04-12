@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - App</title>
+        <link type="text/css" rel="stylesheet" href="other/style.css" />
+    </h:head>
+    <h:body >
+
+
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center">
+                <h:form>
+                    <p:panel style="height: 95%" id="loginGrid">
+                        <div style="margin-left: 43%; margin-top: 10%;">
+                            <img src="images/logos.png" height="200" width="250" /><br/><br/><br/>
+                            <p:messages id="messages"  autoUpdate="true" closable="true"/>
+                            <p:inputText  id="username" style="margin-left: 15px" value="#{manageBean.username}" required="true" requiredMessage="Username harus diisi!">
+                                <p:watermark for="username" value="Username" id="watermark" />
+                            </p:inputText><br/><br/>
+                            <p:password id="password" style="margin-left: 15px" value="#{manageBean.password}">
+                                <p:watermark for="password" value="Password" id="watermark1" />
+                            </p:password><br/><br/>
+                            <p:commandButton style="color: orange; margin-left: 154px"  value="Login" 
+                                             action="#{manageBean.login()}" update="loginGrid"/>
+                        </div>
+                    </p:panel> 
+                </h:form>
+            </p:layoutUnit>
+
+            <!--            Layout footer-->
+            <p:layoutUnit  position="south" size="70">
+                <p:panel style="background-color: black">
+                    <div align="right" style="color: orange">2018 - Abi Wiby - Subur Comp </div>
+                </p:panel>
+            </p:layoutUnit>
+        </p:layout>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - Retur Barang</title>
+    </h:head>
+    <h:body>
+        <h:form id="out">
+            <!--            Input Retur Barang-->
+            <p:panel  style="background-color: orange; margin-right: 50px" id="panelCariPenjualan">               
+                <h:panelGrid  style="border: 0" bgcolor="orange" columns="2">
+                    <p:outputLabel/><p:commandButton value="Cari Penjualan" oncomplete="PF('cariDialogPenjualan').show()" style="width: 223px"/>
+                    ID Penjualan <p:inputText value="#{beanBarangCacat.selectedPenjualan.id}" disabled="true"/>
+                    Nama Barang <p:inputText value="#{beanBarangCacat.nama}" required="true" requiredMessage="Nama Barang harus diisi!"/>
+                    Deskripsi <p:inputText value="#{beanBarangCacat.deskripsi}" required="true" requiredMessage="Deskripsi harus diisi!"/>
+                    <p:commandButton value="Tambah" action="#{beanBarangCacat.addBarangCacat()}" update="out table"/>
+                </h:panelGrid>
+            </p:panel> <br/>
+        </h:form>
+
+        <h:form id="table">
+            #{beanBarangCacat.selectAll()}
+            <p:growl id="msgs"/>
+            <!--            Tabel Retur Barang-->
+            <p:panel header="Tabel Retur Barang" style="background-color: orange;margin-right: 50px" >
+                <p:dataTable editable="true" var="item" value="#{beanBarangCacat.listBarangCacat}">
+                    <p:ajax event="rowEdit" listener="#{beanBarangCacat.onRowEdit}" update=":table:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{beanBarangCacat.onRowCancel}" update=":table:msgs" />
+                    <p:column headerText="ID">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Nama Barang">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.namaBarang}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.namaBarang}" style="width:100%" required="true" requiredMessage="Nama Barang harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Tanggal Retur">
+                        <h:outputText value="#{item.tglRetur}">
+                            <f:convertDateTime timeZone="GMT+7" pattern="dd/MM/YYYY"/>
+                        </h:outputText>
+
+                    </p:column>
+                    <p:column headerText="Deskripsi">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.deskripsi}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.deskripsi}" style="width:100%" required="true" requiredMessage="Deskripsi harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="ID Penjualan">
+                        #{item.idPenjualan.id}
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Delete">
+                        <p:commandLink value="Hapus" action="#{beanBarangCacat.deleteBarangCacat(item)}" style="color: red;" update="@form"><p:confirm header="Konfirmasi hapus retur barang" message="Hapus?"/></p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>  
+        </h:form>
+
+
+        <h:form id="formCariPenjualan">
+            #{beanPenjualan.selectAll()}
+            <p:dialog header="Cari Penjualan" widgetVar="cariDialogPenjualan" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="top">
+
+                <p:dataTable id="tabelPenjualan" editable="true" var="item" value="#{beanPenjualan.listPenjualan}" selectionMode="single" selection="#{beanBarangCacat.selectedPenjualan}" rowKey="#{item.id}">
+                    <p:column headerText="ID Penjualan">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Tanggal Penjualan">
+                        <h:outputText value="#{item.tglPenjualan}">
+                            <f:convertDateTime timeZone="false" pattern="dd/MM/YYYY"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Total">
+                        Rp.<h:outputText value="#{item.total}">
+                            <f:convertNumber type="number"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Pegawai Bertugas">
+                        #{item.idPegawai.namaDepan}
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton process="tabelPenjualan" value="OK" action="#{beanBarangCacat.setting()}" oncomplete="PF('cariDialogPenjualan').hide()" update="out"/>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+

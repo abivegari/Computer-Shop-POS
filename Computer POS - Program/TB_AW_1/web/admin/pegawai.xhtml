@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <title>SUBUR COMP - Pegawai</title>
+
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            #{beanJabatan.selectAll()}
+            <p:growl id="msg"/>
+            <!--            Menu jabatan-->          
+            <p:accordionPanel>               
+                <p:tab title="Input Data Jabatan">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        Nama Jabatan  <p:inputText value="#{beanJabatan.nama_jabatan}" required="true" requiredMessage="Jabatan harus diisi!" converterMessage="Jabatan tidak boleh angka!"/><br/>
+                        <p:commandButton value="Tambah Data Jabatan" action="#{beanJabatan.addJabatan()}" update="form1" style="width: 200px"/><h:outputText/><p:commandButton value="Data Jabatan" oncomplete="PF('dialogJabatan').show()" style="width: 200px"/>
+                    </h:panelGrid>
+                </p:tab>
+            </p:accordionPanel>
+
+            <p:dialog header="Data Jabatan" widgetVar="dialogJabatan" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="top">
+                <p:dataTable editable="true" var="item" value="#{beanJabatan.listJabatan}">
+                    <p:ajax event="rowEdit" listener="#{beanJabatan.onRowEdit}" update="@form:msg" />
+                    <p:ajax event="rowEditCancel" listener="#{beanJabatan.onRowCancel}" update="@form:msg" />
+                    <p:column headerText="ID ">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Nama Jabatan">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.nama}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.nama}" style="width:100%" required="true" requiredMessage="Deskripsi harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Delete">
+                        <p:commandLink value="Hapus" action="#{beanJabatan.deleteJabatan(item)}" style="color: red;" update="@form" immediate="true"><p:confirm header="Konfirmasi hapus jabatan" message="Hapus?"/></p:commandLink>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="OK" oncomplete="PF('dialogJabatan).hide()" immediate="true"/>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="form2">
+            #{beanPegawai.selectAll()}
+            <!--            Menu karyawan-->
+            <p:panel header="Input Data Pegawai" style="background-color: orange;margin-right: 50px" id="panelPegawai">
+                <h:panelGrid columns="2" style="border: 0" cellpadding="5">
+                    Nama Depan <p:inputText value="#{beanPegawai.nama_depan}" required="true" requiredMessage="Nama Depan harus diisi!"/>
+                    Nama Belakang <p:inputText value="#{beanPegawai.nama_belakang}" required="true" requiredMessage="Nama Belakang harus diisi!"/>
+                    Alamat <p:inputText value="#{beanPegawai.alamat}" required="true" requiredMessage="Alamat harus diisi!"/>
+                    Nomor Telepon <p:inputText value="#{beanPegawai.no_telp}" required="true" requiredMessage="Nomor Telepon harus diisi!" converterMessage="No. Telp harus angka!"><f:convertNumber integerOnly="true" type="number"/></p:inputText>
+                    Username <p:inputText value="#{beanPegawai.username}" required="true" requiredMessage="Username harus diisi!"/>
+                    Password <p:password value="#{beanPegawai.password}" required="true" requiredMessage="Password harus diisi!"/>
+                    Jabatan <p:selectOneMenu style="width: 195px" value="#{beanPegawai.selectedJabatan}" converter="entityConverter">
+                        <f:selectItems value="#{beanPegawai.listJabatan}" var="jab" itemLabel="#{jab.nama}"/>
+                    </p:selectOneMenu>
+                    <br/><p:commandButton value="Tambah Data Pegawai" action="#{beanPegawai.addPegawai()}" update="form2 table"></p:commandButton>
+                </h:panelGrid>
+            </p:panel><br/>
+        </h:form>
+        <h:form id="table">
+            #{beanPegawai.selectAll()}
+            <p:growl id="msgs"/>
+            <!--            Tabel karyawan-->
+            <p:panel header="Tabel Data Pegawai" style="background-color: orange;margin-right: 50px">
+                <p:dataTable editable="true" var="item" value="#{beanPegawai.listPegawai}" >
+                    <p:ajax event="rowEdit" listener="#{beanPegawai.onRowEdit}" update=":table:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{beanPegawai.onRowCancel}" update=":table:msgs" />
+                    <p:column headerText="ID Pegawai">
+                        #{item.id}
+                    </p:column>
+                    <p:column headerText="Nama Depan">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.namaDepan}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.namaDepan}" style="width:100%" required="true" requiredMessage="Nama Depan harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Nama Belakang">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.namaBelakang}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.namaBelakang}" style="width:100%" required="true" requiredMessage="Nama Belakang harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Alamat">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.alamat}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.alamat}" style="width:100%" required="true" requiredMessage="Alamat harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Nomor Telepon">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.noTelp}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.noTelp}" required="true" requiredMessage="Nomor Telepon harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Username">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.username}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{item.username}" style="width:100%" required="true" requiredMessage="Username harus diisi!"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Jabatan">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.idJabatan.nama}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{item.idJabatan}" style="width:100%" converter="entityConverter">
+                                    <f:selectItems value="#{beanPegawai.listJabatan}" var="jab" itemLabel="#{jab.nama}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Hapus Data">
+                        <p:commandLink value="Hapus" action="#{beanPegawai.deletePegawai(item)}" style="color: red;" update="@form"><p:confirm header="Konfirmasi Hapus Pegawai" message="Hapus Pegawai?"/></p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>  
+        </h:form>
+
+    </h:body>
+</html>
+

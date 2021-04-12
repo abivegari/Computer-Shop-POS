@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>SUBUR COMP - Transaksi</title>
+    </h:head>
+    <h:body>
+
+        <h:form id="form1">
+            #{beanDetailPenjualan.selectAll()}
+            #{beanBarang.selectAll()}
+            <!--            Input transaksi-->
+            <p:panel  style="background-color: orange; margin-right: 50px" id="panelCari">               
+
+                <h:panelGrid  id="inputCari" style="border: 0" bgcolor="orange">
+
+                    <p:row>
+                        <p:column><p:commandButton value="Cari Barang" oncomplete="PF('cariDialog').show()"/></p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:inputText id="nb" disabled="true" value="#{beanDetailPenjualan.selectedBarang.nama}" >
+                                <p:watermark for="nb" value="Nama Barang" />
+                            </p:inputText>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="h" disabled="true" value="#{beanDetailPenjualan.selectedBarang.harga}">
+                                <f:convertNumber type="number"/>
+                                <p:watermark for="h" value="Harga Barang" /> 
+                            </p:inputText>
+                        </p:column>
+                        <p:column>
+                            <p:spinner id="j" min="1" value="#{beanDetailPenjualan.jumlah}" max="#{beanDetailPenjualan.selectedBarang.stok}">
+                                <p:watermark for="j" value="Jumlah Barang" />
+                            </p:spinner>
+                        </p:column>
+                        <p:column><p:commandButton value="Tambah" action="#{beanDetailPenjualan.addToCart()}" update="formDetail formBayar"/>
+                        </p:column>
+                    </p:row>
+
+                </h:panelGrid>
+            </p:panel> <br/>
+        </h:form>
+
+
+        <h:form id="formDetail">
+            #{beanDetailPenjualan.selectAll()}
+            #{beanBarang.selectAll()}
+            <p:growl id="msg"/>
+            <!--            Tabel transaksi sementara-->
+            <p:panel header="Detail Pembelian" style="background-color: orange;margin-right: 50px">
+                <p:dataTable editable="true" var="item" value="#{beanDetailPenjualan.listDetailPenjualanSementara}">
+                    <p:ajax event="rowEdit" listener="#{beanDetailPenjualan.onRowEdit}" update="@form:msg" />
+                    <p:ajax event="rowEditCancel" listener="#{beanDetailPenjualan.onRowCancel}" update="@form:msg" />
+                    <p:column headerText="Nama Barang">
+                        #{item.idBarang.nama}
+                    </p:column>
+                    <p:column headerText="Harga Barang">
+                        #{item.idBarang.harga}
+                    </p:column>
+                    <p:column headerText="Jumlah Barang">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.jumlah}" /></f:facet>
+                            <f:facet name="input">
+                                <p:spinner size="18" value="#{item.jumlah}" min="1" max="#{item.idBarang.stok}"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Sub Total">
+                        #{item.harga}
+                    </p:column>
+                    <p:column headerText="Ubah Data">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="Delete">
+                        <p:commandLink value="Hapus" action="#{beanDetailPenjualan.deleteDetail(item)}" style="color: red;" update="@form"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel><br/>
+        </h:form>
+
+        <h:form id="formBayar">
+            <p:growl id="msgs" showDetail="true"/>
+            #{beanDetailPenjualan.selectAll()}
+            #{beanBarang.selectAll()}
+            <!--            Input transaksi -->
+            <p:panel header="Total Transaksi" style="background-color: orange; margin-right: 50px">
+                <h:panelGrid style="border: 0" bgcolor="orange" columns="2">
+                    <h:outputText/><p:selectOneMenu style="width: 193px" value="#{beanDetailPenjualan.selectedPegawai}" converter="entityConverter">
+                        <f:selectItems value="#{manageBean.pegawaiLogin}" var="peg" itemLabel="#{peg.namaDepan}"/>
+                    </p:selectOneMenu>
+                    Rp.<h:panelGroup><p:inputText value="#{beanDetailPenjualan.total}" id="t" disabled="true">
+                            <f:convertNumber type="number"/>
+                            <p:watermark for="t" value="Total Pembelian" />
+                        </p:inputText></h:panelGroup>
+                    Rp.<h:panelGroup><p:inputText id="h" value="#{beanDetailPenjualan.jumlahBayar}">
+                            <f:convertNumber type="number"/>
+                            <p:watermark for="h" value="Jumlah Pembayaran" />
+                        </p:inputText></h:panelGroup>
+                    <h:outputText/><h:panelGroup>
+                        <p:commandButton value="Bayar" action="#{beanDetailPenjualan.addPenjualan()}" update="formCari formBayar formDetail form1"><p:confirm header="Konfirmasi Pembayaran" message="Bayar?"/></p:commandButton></h:panelGroup>
+                </h:panelGrid>
+            </p:panel> <br/>  
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes"/>
+                <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>  
+        </h:form>
+
+        <h:form id="formCari">
+            #{beanDetailPenjualan.selectAll()}
+            #{beanBarang.selectAll()}
+            <p:dialog header="Cari Barang" widgetVar="cariDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="top">
+                <p:outputPanel id="cariBarang" style="text-align:left;">
+                    <p:dataTable id="tabelCari" var="item" value="#{beanDetailPenjualan.listBarang}" selectionMode="single" selection="#{beanDetailPenjualan.selectedBarang}" rowKey="#{item.id}" filteredValue="#{beanDetailPenjualan.filteredBarang}" widgetVar="tabBarang">                    
+                        <p:column filterBy="#{item.idKategori.nama}" headerText="Kategori" filterMatchMode="exact">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('tabBarang').filter()" styleClass="custom-filter">
+                                    <f:selectItem itemLabel="Cari Kategori" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{beanKategori.listKategori}" var="kat" itemLabel="#{kat.nama}" itemValue="#{kat.nama}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{item.idKategori.nama}" />
+                        </p:column>
+                        <p:column filterBy="#{item.idMerk.merk}" headerText="Merk" filterMatchMode="contains">
+                            <h:outputText value="#{item.idMerk.merk}" />
+                        </p:column>
+                        <p:column filterBy="#{item.nama}" headerText="Nama Barang" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Harga">
+                            <h:outputText value="#{item.harga}"><f:convertNumber type="number"/></h:outputText>
+                        </p:column>
+                        <p:column headerText="Stok">
+                            <h:outputText value="#{item.stok}" />
+                        </p:column>                
+                    </p:dataTable>
+                    <br/>
+                    <p:commandButton process="tabelCari" value="OK" oncomplete="PF('cariDialog').hide()" update="form1"/>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+
